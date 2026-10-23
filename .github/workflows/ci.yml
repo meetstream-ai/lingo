@@ -1,0 +1,24 @@
+name: Verify accessibility kit
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run test:e2e
+      - run: npm run benchmark -- --demo
+      - run: docker build -t meetstream-accessibility-kit:local .
+      - run: node scripts/smoke-docker.js
+      - uses: actions/upload-artifact@v7.0.2
+        if: failure()
+        with:
+          name: browser-test-evidence
+          path: test-results/

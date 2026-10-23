@@ -1,0 +1,40 @@
+{
+  "name": "lingo",
+  "version": "1.7.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "start": "node scripts/start.js",
+    "stop": "node scripts/stop.js",
+    "dev": "node --watch --env-file-if-exists=.env server/index.js",
+    "tunnel": "node --env-file-if-exists=.env scripts/tunnel.js",
+    "build": "node scripts/build.js",
+    "test": "node --test test/*.test.js",
+    "test:e2e": "playwright test",
+    "benchmark": "node --env-file-if-exists=.env scripts/benchmark.js",
+    "serve": "node --env-file-if-exists=.env server/index.js",
+    "check:hosting": "node --env-file-if-exists=.env scripts/check-hosting.js"
+  },
+  "dependencies": {
+    "@meetstream/sdk": "^1.0.0",
+    "@ngrok/ngrok": "^1.7.0",
+    "express": "^5.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.64.0"
+  },
+  "description": "Multilingual meeting captions, translated transcripts and accessible exports powered by MeetStream.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meetstream-ai/lingo.git"
+  },
+  "homepage": "https://github.com/meetstream-ai/lingo#readme",
+  "bugs": {
+    "url": "https://github.com/meetstream-ai/lingo/issues"
+  },
+  "license": "MIT"
+}

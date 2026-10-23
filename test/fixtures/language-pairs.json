@@ -1,0 +1,114 @@
+[
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "नमस्ते सभी को। आज हम अपनी बैठकों को अधिक सुलभ बनाने पर बात करेंगे।",
+    "reference": "Hello everyone. Today we will talk about making our meetings more accessible."
+  },
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "हमें मूल भाषा और अनुवाद को साथ में दिखाना चाहिए।",
+    "reference": "We should show the original language and the translation side by side."
+  },
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "क्या हम कैप्शन का आकार बदल सकते हैं और कीबोर्ड से ऐप चला सकते हैं?",
+    "reference": "Can we change the caption size and use the app with a keyboard?"
+  },
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "हम विलंब को मापेंगे और वास्तविक परिणामों को साफ़-साफ़ बताएँगे।",
+    "reference": "We will measure latency and report the real results clearly."
+  },
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "बैठक शुरू करने से पहले सभी प्रतिभागियों की अनुमति लें।",
+    "reference": "Get permission from all participants before starting the meeting."
+  },
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "अगर अनुवाद विफल हो जाए तो मूल पाठ सुरक्षित रहना चाहिए।",
+    "reference": "If the translation fails, the original text should remain safe."
+  },
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "कृपया एक बार में एक व्यक्ति बोलें ताकि वक्ता की पहचान सही रहे।",
+    "reference": "Please speak one person at a time so that speaker attribution stays correct."
+  },
+  {
+    "pair": "hi-en",
+    "source": "hi",
+    "target": "en",
+    "text": "बैठक के बाद हम हिंदी और अंग्रेज़ी में ट्रांसक्रिप्ट साझा करेंगे।",
+    "reference": "After the meeting, we will share the transcript in Hindi and English."
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "நேரடி வசனங்கள் இருந்தால் அனைவரும் உரையாடலை எளிதாகப் பின்தொடர முடியும்.",
+    "reference": "लाइव कैप्शन होने से हर कोई बातचीत को आसानी से समझ सकता है।"
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "ஒவ்வொரு வசனத்திலும் யார் பேசுகிறார்கள் என்பது தெளிவாக இருக்க வேண்டும்.",
+    "reference": "हर कैप्शन में यह स्पष्ट होना चाहिए कि कौन बोल रहा है।"
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "கூட்டத்திற்குப் பிறகு மொழிபெயர்க்கப்பட்ட உரையை பதிவிறக்கம் செய்யலாம்.",
+    "reference": "बैठक के बाद अनुवादित ट्रांसक्रिप्ट डाउनलोड किया जा सकता है।"
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "நன்றி. அடுத்த கூட்டத்தில் இந்த வசதிகளைச் சோதிப்போம்.",
+    "reference": "धन्यवाद। अगली बैठक में हम इन सुविधाओं का परीक्षण करेंगे।"
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "கூட்டத்தைத் தொடங்குவதற்கு முன் அனைவரிடமும் அனுமதி பெறுங்கள்.",
+    "reference": "बैठक शुरू करने से पहले सभी से अनुमति लें।"
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "எழுத்தின் அளவை அதிகரித்தால் வசனங்களைப் படிப்பது எளிதாக இருக்கும்.",
+    "reference": "अक्षरों का आकार बढ़ाने से कैप्शन पढ़ना आसान होगा।"
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "இணைப்பு துண்டிக்கப்பட்டாலும் ஏற்கனவே சேமித்த உரை பாதுகாப்பாக இருக்கும்.",
+    "reference": "कनेक्शन टूटने पर भी पहले से सहेजा गया पाठ सुरक्षित रहेगा।"
+  },
+  {
+    "pair": "ta-hi",
+    "source": "ta",
+    "target": "hi",
+    "text": "இரண்டு பேர் ஒரே நேரத்தில் பேசினால் பெயர் தவறாகக் காட்டப்படலாம்.",
+    "reference": "अगर दो लोग एक साथ बोलें तो नाम गलत दिखाया जा सकता है।"
+  }
+]

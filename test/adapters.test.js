@@ -1,0 +1,24 @@
+import test from'node:test';import assert from'node:assert/strict';import{calendarMeetingName,calendarEvents}from'../server/calendar.js';import{shareArtifact,discordWebhook}from'../server/providers.js';import{createApp}from'../server/app.js';
+const env={CALENDAR_CLIENT_ID:'fixture-id',CALENDAR_CLIENT_SECRET:'fixture-secret',CALENDAR_REFRESH_TOKEN:'fixture-refresh',CALENDAR_ID:'primary'};
+test('Calendar adapter matches conference identity and nearest scheduled event without changing calendar data',async()=>{
+ const at=Date.now(),calls=[],events=[{id:'wrong',summary:'Different call',start:{dateTime:new Date(at).toISOString()},hangoutLink:'https://meet.google.com/xyz-uvwx-abc'},{id:'near',summary:'DevRel catch-up',start:{dateTime:new Date(at).toISOString()},conferenceData:{entryPoints:[{uri:'https://meet.google.com/abc-defg-hij?authuser=0'}]}},{id:'later',summary:'GTM sync-up',start:{dateTime:new Date(at+86400000).toISOString()},hangoutLink:'https://meet.google.com/abc-defg-hij'}];
+ const fetchImpl=async(url,opts)=>{calls.push({url,opts});return url.endsWith('/token')?Response.json({access_token:'fixture-access'}):Response.json({items:events});};
+ const m={createdAt:at,meetingLink:'https://meet.google.com/abc-defg-hij'};assert.deepEqual(await calendarMeetingName(m,env,fetchImpl),{title:'DevRel catch-up',eventId:'near'});assert.ok(calls[1].url.includes('singleEvents=true'));assert.equal(calls[1].opts.method,undefined);assert.match(calls[1].opts.headers.Authorization,/fixture-access/);
+ assert.equal(await calendarMeetingName({...m,meetingLink:'https://meet.google.com/mno-pqrs-tuv'},env,fetchImpl),null);await assert.rejects(()=>calendarEvents({},fetchImpl),/Configure/);
+});
+test('Discord adapter restricts outbound host, attaches exact UTF-8 artifact and suppresses mentions',async()=>{
+ const value='https://discord.com/api/webhooks/123456789012345678/fixture_webhook_token_abcdefghijklmnopqrstuvwxyz';for(const url of['http://discord.com/api/webhooks/1/x','https://evil.example/api/webhooks/123/x',value+'?thread_id=1',value+'#fragment'])assert.throws(()=>discordWebhook(url));
+ let sent;const artifact={filename:'devrel-hi.txt',content:'नमस्ते @everyone',type:'text/plain;charset=utf-8'};
+ const result=await shareArtifact('discord',artifact,{DISCORD_WEBHOOK_URL:value},async(url,opts)=>{sent={url,opts};return Response.json({id:'message',channel_id:'channel',guild_id:'guild'});});
+ assert.equal(result.url,'https://discord.com/channels/guild/channel/message');assert.equal(sent.url.searchParams.get('wait'),'true');assert.deepEqual(JSON.parse(sent.opts.body.get('payload_json')).allowed_mentions,{parse:[]});assert.equal(await sent.opts.body.get('files[0]').text(),artifact.content);assert.equal(sent.opts.body.get('files[0]').name,artifact.filename);
+ await assert.rejects(()=>shareArtifact('discord',{...artifact,content:'x'.repeat(8*1024*1024+1)},{DISCORD_WEBHOOK_URL:value}),/8 MB/);
+});
+test('live source change is rejected without altering recognition config; Calendar naming preserves a later manual edit',async()=>{
+ const kit=createApp({database:':memory:',startWorker:false,env,fetchImpl:async url=>url.endsWith('/token')?Response.json({access_token:'fixture-access'}):Response.json({items:[{id:'calendar-call',summary:'DevRel catch-up',hangoutLink:'https://meet.google.com/abc-defg-hij',start:{dateTime:new Date().toISOString()}}]})});
+ const server=kit.app.listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));const base=`http://127.0.0.1:${server.address().port}`;const call=(path,body,method='POST')=>fetch(base+path,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ try{const m={id:'named',title:'Meeting captions',autoTitle:true,meetingLink:'https://meet.google.com/abc-defg-hij',mode:'live',source:'hi',targets:['en'],liveProvider:'deepgram_streaming',postCallProvider:'deepgram',translationProvider:'google',createdAt:Date.now(),status:'live'};kit.store.saveMeeting(m);
+ const rejected=await call('/api/meetings/named/source',{source:'ta'});assert.equal(rejected.status,409);assert.equal(kit.store.meeting(m.id).source,'hi');assert.equal(kit.store.db.prepare('SELECT count(*)AS n FROM jobs').get().n,0);
+ const renamed=await(await call('/api/meetings/named/name/refresh',{})).json();assert.equal(renamed.meeting.title,'DevRel catch-up');assert.equal(renamed.meeting.services.speech,'Deepgram');assert.equal(renamed.meeting.services.translation,'Google Translate');
+ const edit=await call('/api/meetings/named',{title:'My chosen name',notes:'',actions:[],version:1},'PATCH');assert.equal(edit.status,200);assert.equal(kit.store.meeting(m.id).autoTitle,false);assert.equal((await call('/api/meetings/named/name/refresh',{})).status,409);assert.equal(kit.store.meeting(m.id).title,'My chosen name');
+ }finally{await kit.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
+});

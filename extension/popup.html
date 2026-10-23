@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Lingo captions</title><link rel="stylesheet" href="popup.css"><script src="popup.js" defer></script>
+</head>
+<body>
+  <header><strong>Lingo</strong><span id="extension-version">Meeting captions</span></header>
+  <main>
+    <form id="pair-form">
+      <h1>Connect your workspace</h1>
+      <p>Sign in to your workspace once. Then start captions from any supported meeting tab. This allows the extension to list, start and stop meetings for 24 hours.</p>
+      <div class="field"><label for="workspace">Workspace URL</label><input id="workspace" type="url" value="http://localhost:3000" required placeholder="https://your-workspace.example"></div>
+      <button id="quick-connect" type="button">Connect open workspace</button><details><summary>Manual connection</summary><div class="field"><label for="code">One-time pairing code</label><input id="code" autocomplete="off" spellcheck="false" maxlength="64"></div>
+      <button id="connect" class="secondary">Connect meeting</button></details>
+    </form>
+    <section id="workspace-connected" hidden>
+      <h1>Captions for this tab</h1><p id="room-status" class="help"></p>
+      <form id="launch-form">
+        <div class="field"><label for="meeting-url">Meeting invitation</label><input id="meeting-url" type="url" required placeholder="https://meet.google.com/abc-defg-hij"></div>
+        <div class="field"><label for="source">Spoken language</label><span class="select-box"><select id="source"></select></span></div>
+        <div class="field"><label for="caption-target">Caption language</label><span class="select-box"><select id="caption-target"></select></span></div>
+        <details><summary>Providers and meeting title</summary><div class="field"><label for="speech-provider">Speech provider</label><span class="select-box"><select id="speech-provider"><option value="deepgram">Deepgram</option><option value="meetstream">MeetStream · automatic detection</option><option value="assemblyai">AssemblyAI · English live</option><option value="jigsawstack">JigsawStack · Google Meet</option></select></span></div>
+          <div class="field"><label for="translation-provider">Translation provider</label><span class="select-box"><select id="translation-provider"></select></span></div><div class="field"><label for="call-title">Meeting title</label><input id="call-title" placeholder="Use meeting or calendar name" maxlength="100"></div></details>
+        <button id="launch">Start captions</button><button id="join-meeting" class="secondary" type="button">Open meeting in a new tab</button>
+      </form>
+      <section id="current-session" hidden><h2 id="session-title"></h2><p id="session-status" role="status"></p><p id="session-providers" class="provider-label"></p><details><summary id="session-source"></summary><p id="session-source-help" class="help"></p><form id="switch-source-form"><div class="field"><label for="switch-source">New spoken language</label><span class="select-box"><select id="switch-source" required></select></span></div><p class="help">Restarts the bot in this call. Captions pause; admit the bot again if asked. Earlier recording parts stay saved.</p><button id="switch-source-save" class="secondary">Restart captions in new language</button></form></details><div class="field"><label for="session-language">Caption language</label><span class="select-box"><select id="session-language"></select></span></div><button id="session-show" type="button">Show captions</button><button id="end-meeting" class="secondary" type="button">End recording and open summary</button><button id="new-session" class="secondary" type="button" hidden>Start another session in this room</button><div class="links"><a id="session-transcript" target="_blank" rel="noreferrer">Transcript</a><a id="session-summary" target="_blank" rel="noreferrer">Summary</a></div></section>
+      <details id="recent"><summary>Recent meetings</summary><div id="recent-meetings"></div></details>
+      <p class="help">A visible bot joins your call. Admit it to start transcription. Speech and translation use your workspace accounts.</p><div class="links"><a id="workspace-home" target="_blank" rel="noreferrer">Meeting library</a><a id="connections-link" target="_blank" rel="noreferrer">Connections</a></div><button id="workspace-disconnect" class="secondary">Disconnect workspace</button>
+    </section>
+    <section id="connected" hidden>
+      <h1 id="meeting-title" dir="auto">Your meeting</h1><p id="meeting-status"></p>
+      <div class="field"><label for="language">Read captions in</label><span class="select-box"><select id="language"></select></span></div>
+      <button id="show">Show captions on this tab</button>
+      <p class="help">Open the paired meeting tab first. For a sample, use the workspace tab.</p>
+      <div class="links"><a id="open-meeting" target="_blank" rel="noreferrer" hidden>Open paired meeting</a><a id="open-workspace" target="_blank" rel="noreferrer">Open workspace</a></div>
+      <details><summary>Translation usage</summary><p class="help">Adding a language translates saved turns and future captions. Provider usage may be billed. Up to eight languages per meeting. Admit the meeting bot before live captions can arrive.</p></details>
+      <button id="disconnect" class="secondary">Disconnect this browser</button>
+    </section>
+    <p id="error" role="alert" hidden></p><p id="status" role="status"></p>
+  </main>
+</body>
+</html>

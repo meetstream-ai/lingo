@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#14234a" />
+    <title>Lingo · Meeting accessibility</title>
+    <link rel="icon" href="/assets/accessibility-mark.svg" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/speech.js" defer></script><script src="/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip" href="#main" tabindex="0">Skip to meeting workspace</a>
+    <svg class="icon-definitions" aria-hidden="true">
+      <defs>
+        <symbol id="captions-icon" viewBox="0 0 24 24">
+          <rect x="3" y="5" width="18" height="14" rx="3" />
+          <path d="M10 10H7v4h3m7-4h-3v4h3" />
+        </symbol>
+        <symbol id="sessions-icon" viewBox="0 0 24 24">
+          <rect x="4" y="4" width="16" height="16" rx="3" />
+          <path d="M8 9h8M8 13h8M8 17h5" />
+        </symbol>
+        <symbol id="measure-icon" viewBox="0 0 24 24">
+          <path d="M4 4v16h16M8 15v-4m5 4V7m5 8V5" />
+        </symbol>
+        <symbol id="settings-icon" viewBox="0 0 24 24">
+          <path d="M4 7h16M4 17h16" />
+          <circle cx="9" cy="7" r="3" />
+          <circle cx="15" cy="17" r="3" />
+        </symbol>
+        <symbol id="arrow-icon" viewBox="0 0 24 24">
+          <path d="M4 12h16m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="download-icon" viewBox="0 0 24 24">
+          <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
+        </symbol>
+        <symbol id="expand-icon" viewBox="0 0 24 24">
+          <path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5" />
+        </symbol>
+      </defs>
+    </svg>
+    <aside class="sidebar">
+      <a
+        id="brand-home"
+        class="brand"
+        href="/"
+        aria-label="Lingo home"
+        ><img
+          class="brand-logo"
+          src="/assets/accessibility-logo.svg"
+          alt="Lingo"
+        /><span class="brand-sub">Accessibility kit</span></a
+      >
+      <nav aria-label="Workspace">
+        <button
+          class="nav-button active"
+          data-view="captions"
+          aria-current="page"
+        >
+          <svg><use href="#captions-icon" /></svg>Captions</button
+        ><button class="nav-button" data-view="sessions">
+          <svg><use href="#sessions-icon" /></svg>Meetings</button
+        ><button class="nav-button" data-view="measurements">
+          <svg><use href="#measure-icon" /></svg>Meeting health</button
+        ><button class="nav-button" data-view="settings">
+          <svg><use href="#settings-icon" /></svg>Connections
+        </button>
+      </nav>
+      <div class="sidebar-note">
+        <svg class="small-wave" aria-hidden="true" viewBox="0 0 36 30">
+          <path d="M2 17c2-14 8-14 10 0s8 14 10 0" />
+        </svg>
+        <p>A place for<br />every voice.</p>
+        <a href="https://docs.meetstream.ai" target="_blank" rel="noreferrer"
+          >MeetStream documentation ↗</a
+        >
+      </div>
+      <div class="workspace-label">
+        <span class="workspace-avatar">M</span>
+        <div>Meeting workspace<small>Single workspace starter</small></div>
+      </div>
+    </aside>
+    <div class="shell">
+      <header class="topbar">
+        <nav id="breadcrumb" class="breadcrumbs" aria-label="Breadcrumb">
+          <span>Workspace / Captions</span>
+        </nav>
+        <div class="topbar-end"><a href="/" class="text-button">Home</a>
+          <span class="privacy">Private workspace</span
+          ><button id="logout" class="text-button" hidden>Sign out</button
+          ><button
+            id="profile-open"
+            class="avatar"
+            aria-label="Profile and reading preferences"
+            disabled
+          >
+            <span id="profile-initials" aria-hidden="true">M</span>
+          </button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <section id="view-captions" class="view">
+          <a id="back-to-meetings" class="back-link" data-library hidden
+            >← Back to meetings</a
+          >
+          <div class="page-heading">
+            <div>
+              <h1 id="workspace-heading">Every voice, understood.</h1>
+              <p id="workspace-description">
+                Follow the conversation in the language that works for you.
+              </p>
+            </div>
+            <button class="primary" data-new-meeting>
+              <span aria-hidden="true">＋</span> New meeting
+            </button>
+          </div>
+          <div id="sample-notice" class="notice" hidden>
+            <strong>Sample replay</strong
+            ><span
+              >Hindi and Tamil dialogue with handwritten translations. No
+              meeting audio or provider measurements.</span
+            >
+          </div>
+          <div class="session-bar">
+            <div class="session-info">
+              <span class="session-symbol" aria-hidden="true"
+                ><svg><use href="#captions-icon" /></svg
+              ></span>
+              <div>
+                <h2 id="session-title">Your conversation starts here</h2>
+                <div class="session-meta">
+                  <span id="session-status" class="status neutral"
+                    >No meeting selected</span
+                  ><span id="session-detail"
+                    >Start a sample or connect a real meeting</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="session-actions">
+              <a
+                id="join-call"
+                class="secondary"
+                target="_blank"
+                rel="noreferrer"
+                hidden
+                >Join call ↗</a
+              ><button id="copy-meeting-link" class="secondary" disabled>
+                Copy workspace link
+              </button>
+              <label class="sr-only" for="meeting-picker">Select meeting</label
+              ><select id="meeting-picker">
+                <option value="">Select meeting</option></select
+              ><button id="stop-meeting" class="secondary" disabled>
+                End meeting
+              </button>
+              <button id="add-language-open" class="secondary" disabled>Add language</button>
+              <button id="edit-meeting" class="secondary" disabled>
+                Edit details
+              </button>
+            </div>
+          </div>
+          <nav id="recording-parts" class="recording-parts" aria-label="Recording parts" hidden></nav>
+          <div id="meeting-services" class="meeting-services" hidden></div>
+          <div class="meeting-settings"><button id="spoken-language-info" class="secondary" disabled>Spoken language</button><button id="refresh-meeting-name" class="secondary" hidden>Find calendar name</button><p id="meeting-name-status" class="form-help" role="status"></p></div>
+          <div id="meeting-error" class="error-banner" hidden></div>
+          <nav
+            id="meeting-sections"
+            class="meeting-sections"
+            aria-label="Meeting sections"
+            hidden
+          >
+            <a data-panel="overview">Overview</a
+            ><a data-panel="captions">Live captions</a
+            ><a data-panel="transcript">Transcript</a
+            ><a data-panel="summary">Summary</a><a data-panel="recording">Recordings</a
+            ><a data-panel="notes">Notes & actions</a>
+          </nav>
+          <p id="recording-empty" class="empty-record" hidden>
+            This sample has no audio or video recording. Start a real meeting to
+            capture one.
+          </p>
+          <div id="detail-layout" class="detail-layout">
+          <section
+            class="caption-panel"
+            aria-labelledby="caption-heading"
+            id="caption-panel"
+          >
+            <div class="panel-toolbar">
+              <div>
+                <h2 id="caption-heading">Live captions</h2>
+                <span id="stream-status" class="subtle"
+                  >Ready when you are</span
+                >
+              </div>
+              <div class="caption-tools">
+                <label for="viewer-language">Translate to</label
+                ><select id="viewer-language">
+                  <option value="en">English</option>
+                  <option value="hi">हिन्दी · Hindi</option></select
+                ><button
+                  id="fullscreen"
+                  class="icon-button"
+                  aria-label="Expand captions"
+                >
+                  <svg><use href="#expand-icon" /></svg>
+                </button>
+              </div>
+            </div>
+            <div class="caption-stage" id="caption-stage">
+              <div class="caption-empty" id="caption-empty">
+                <span class="empty-wave" aria-hidden="true"
+                  ><i></i><i></i><i></i><i></i><i></i><i></i><i></i
+                ></span>
+                <h3>Make room for every language.</h3>
+                <p>
+                  Start a Hindi and Tamil sample to explore live captions,<br
+                    class="desktop-break"
+                  />
+                  speaker attribution, and translated transcripts.
+                </p>
+                <button id="start-sample" class="primary">
+                  Try the sample <svg><use href="#arrow-icon" /></svg>
+                </button>
+                <p class="empty-footnote">
+                  No credentials needed for the sample
+                </p>
+              </div>
+              <p id="caption-waiting" class="empty-record" role="status" hidden>
+                Waiting for speech.
+              </p>
+              <div id="caption-content" hidden>
+                <div class="speaker-line">
+                  <span id="current-avatar" class="speaker-avatar">A</span
+                  ><strong id="current-speaker"></strong
+                  ><span id="caption-time" class="subtle"></span>
+                </div>
+                <div class="caption-columns">
+                  <section>
+                    <h3 id="original-label">Original</h3>
+                    <p id="caption-original" dir="auto"></p>
+                  </section>
+                  <section class="translation-column">
+                    <h3 id="translated-label">English</h3>
+                    <p id="caption-translated" dir="auto"></p>
+                  </section>
+                </div>
+              </div>
+            </div>
+            <div class="caption-footer">
+              <span class="caption-tip"
+                >Speaker names travel with every caption.</span
+              >
+              <div class="reading-tools">
+                <label for="caption-size">Text size</label
+                ><select id="caption-size">
+                  <option value="24">Standard</option>
+                  <option value="30" selected>Large</option>
+                  <option value="38">Extra large</option></select
+                ><button
+                  id="high-contrast"
+                  class="text-button"
+                  aria-pressed="false"
+                >
+                  High contrast</button
+                ><button
+                  id="pause-view"
+                  class="text-button"
+                  aria-pressed="false"
+                >
+                  Pause display
+                </button>
+              </div>
+            </div>
+          </section>
+          <section
+            id="recording-panel"
+            class="recording-panel"
+            aria-labelledby="recording-heading"
+            hidden
+          >
+            <div class="transcript-heading">
+              <div>
+                <h2 id="recording-heading">Meeting recording</h2>
+                <p id="recording-status" role="status">
+                  Recording starts when the bot is admitted.
+                </p>
+              </div>
+              <button id="refresh-recording" class="secondary">
+                Refresh recording
+              </button>
+            </div>
+            <div id="recording-artwork" class="recording-artwork" aria-hidden="true"><svg><use href="#captions-icon" /></svg><span>Meeting audio</span><div class="audio-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+            <audio
+              id="audio-player"
+              aria-label="Meeting audio recording"
+              controls
+              preload="none"
+              hidden
+            ></audio>
+            <video
+              id="video-player"
+              aria-label="Meeting video recording"
+              controls
+              preload="none"
+              hidden
+            >
+              <track
+                id="video-captions"
+                kind="captions"
+                label="Original captions"
+                srclang="und"
+              />
+            </video>
+            <dl id="recording-meta" class="recording-meta"></dl>
+            <p class="recording-alignment form-help">Transcript times are provider-reported; their alignment with the recording can vary.</p>
+            <div class="share-actions">
+              <a id="download-audio" class="secondary" download hidden
+                >Download audio</a
+              ><a id="download-video" class="secondary" download hidden
+                >Download video</a
+              ><button id="retranscribe" class="secondary" hidden>
+                Re-transcribe saved audio
+              </button>
+            </div>
+            <p class="form-help">
+              Recordings are available after the call. Audio is captured by
+              default; video is opt-in. Provider media expires after 48 hours.
+              Re-transcription uses the post-call provider selected for this meeting.
+            </p>
+          </section>
+          <section
+            class="transcript-panel"
+            aria-labelledby="transcript-heading"
+            id="transcript-panel"
+          >
+            <div class="transcript-heading">
+              <div>
+                <h2 id="transcript-heading">Conversation transcript</h2>
+                <p id="transcript-description">
+                  Original words. Shared understanding.
+                </p>
+              </div>
+              <div class="transcript-controls">
+                <button id="save-archive" class="secondary" disabled>
+                  Save full archive
+                </button>
+                <button id="export-open" class="secondary" disabled>
+                  <svg><use href="#download-icon" /></svg> Export & share
+                </button>
+              </div>
+            </div>
+            <div class="transcript-filter">
+              <div
+                role="group"
+                aria-label="Transcript version"
+                class="segmented"
+              >
+                <button id="show-live" aria-pressed="true">Live record</button
+                ><button id="show-final" aria-pressed="false">Post-call</button>
+              </div>
+              <label class="search-label"
+                ><span class="sr-only">Search transcript</span
+                ><input
+                  id="transcript-search"
+                  type="search"
+                  placeholder="Search the conversation…" /></label
+              ><label class="transcript-language-label" for="transcript-language">Read in<select id="transcript-language" aria-label="Read in" disabled></select></label><span id="turn-count" class="subtle">0 turns</span>
+            </div>
+            <div class="transcript-column-labels" aria-hidden="true">
+              <span>Speaker / time</span><span>Original</span
+              ><span id="transcript-target-label">English</span>
+            </div>
+            <div id="transcript-rows">
+              <p class="empty-record">
+                Your speaker-attributed transcript will appear here.
+              </p>
+            </div>
+          </section>
+          <section id="summary-panel" class="notebook-panel" aria-labelledby="summary-heading" hidden>
+            <div class="transcript-heading"><div><h2 id="summary-heading">Meeting summary</h2><p>Review a short overview in your reading language.</p></div></div>
+            <div class="summary-toolbar"><label for="summary-language">Summary language</label><select id="summary-language"></select><label for="summary-type">Summary type</label><select id="summary-type"><option value="excerpts">Selected transcript excerpts</option><option value="ai">AI summary · JigsawStack</option></select><button id="generate-summary" class="primary">Generate summary</button></div>
+            <p class="form-help">A post-call overview is saved automatically when the final transcript and its translations are ready. Excerpts select up to six complete sentences across the meeting. AI summaries use JigsawStack text credentials and your translation provider; check facts against the transcript.</p>
+            <p id="summary-error" class="form-error" role="alert" hidden></p><p id="summary-status" class="form-help" role="status"></p><ul id="summary-points" class="summary-points"></ul>
+            <div class="share-actions"><button id="listen-summary" class="secondary" aria-pressed="false" disabled>Listen to summary</button><button id="copy-summary" class="secondary" disabled>Copy summary</button><a id="download-summary" class="secondary" hidden>Download summary</a></div>
+          </section>
+          <section
+            id="notebook-panel"
+            class="notebook-panel"
+            aria-labelledby="notebook-heading"
+            hidden
+          >
+            <div class="transcript-heading">
+              <div>
+                <h2 id="notebook-heading">Meeting notes & action items</h2>
+                <p>
+                  Your team's decisions and follow-ups, saved with this meeting.
+                </p>
+              </div>
+              <div class="transcript-controls">
+                <a id="download-notes" class="secondary" download>Download notes</a
+                ><button id="edit-notes" class="secondary">Edit notes</button>
+              </div>
+            </div>
+            <div class="notebook-columns">
+              <section>
+                <h3>Notes</h3>
+                <p id="notebook-notes" dir="auto"></p>
+              </section>
+              <section>
+                <h3>Action items</h3>
+                <div id="notebook-actions"></div>
+              </section>
+            </div>
+          </section>
+          </div>
+          <p id="saved-status" class="saved-status" role="status">
+            Original captions are saved as they arrive
+          </p>
+          <footer class="workspace-footer">
+            <span>Powered by MeetStream</span
+            ><span>Machine translations benefit from human review.</span>
+          </footer>
+        </section>
+        <section id="view-sessions" class="view" hidden>
+          <div class="page-heading">
+            <div>
+              <h1>Your meetings</h1>
+              <p>
+                Return to a conversation, review its transcript, or export an
+                accessible record.
+              </p>
+            </div>
+            <button class="primary" data-new-meeting>
+              <span aria-hidden="true">＋</span> New meeting
+            </button>
+          </div>
+          <div class="library-toolbar">
+          <form id="meeting-search-form" class="library-search">
+            <label for="meeting-search" class="sr-only">Search meetings</label
+            ><input
+              id="meeting-search"
+              type="search"
+              maxlength="100"
+              placeholder="Search meeting titles…"
+            /><button class="secondary" type="submit">Search</button>
+            <label for="meeting-filter">Status</label
+            ><select id="meeting-filter">
+              <option value="all">All meetings</option>
+              <option value="active">In progress</option>
+              <option value="finished">Finished</option>
+              <option value="attention">Needs attention</option>
+            </select>
+          </form>
+          <div class="library-tools"><div class="library-view" role="group" aria-label="Meeting view"><button id="library-grid" class="secondary" aria-pressed="true">Grid</button><button id="library-list" class="secondary" aria-pressed="false">List</button></div><button id="library-refresh" class="secondary">Refresh</button></div>
+          </div>
+          <p id="library-error" class="error-banner" role="alert" hidden></p>
+          <div id="meeting-list" class="meeting-list"></div>
+          <nav class="pagination" aria-label="Meeting pages">
+            <button id="meeting-prev" class="secondary" disabled>
+              Previous</button
+            ><span id="meeting-page" role="status">Loading meetings…</span
+            ><button id="meeting-next" class="secondary" disabled>Next</button>
+          </nav>
+        </section>
+        <section id="view-measurements" class="view" hidden>
+          <div class="page-heading">
+            <div>
+              <h1>How is this meeting doing?</h1>
+              <p>
+                Check whether captions are arriving, translations are ready, and anything needs attention.
+              </p>
+            </div>
+            <button id="download-measurements" class="secondary" disabled>
+              Download technical report
+            </button>
+          </div>
+          <div class="notice">
+            <strong>About caption speed</strong
+            ><span
+              >The numbers below cover translating text, not the whole delay between speaking and seeing a caption.</span
+            >
+          </div>
+          <div id="metrics-body"></div>
+          <section class="explanation">
+            <h2>What does this tell me?</h2><p>A ready translation can be read or exported. A failed translation needs attention in Connections or Retry failed work. Ratings come from people who reviewed the text.</p><p>Typical translation time measures how long the text translator takes to respond. It does not include microphone capture or speech recognition. Open Technical details if you need the developer timing report.</p>
+          </section>
+        </section>
+        <section id="view-settings" class="view" hidden>
+          <div class="page-heading">
+            <div>
+              <h1>Bring it all together.</h1>
+              <p>
+                Connect meeting transcription, translation, and the places your
+                team works.
+              </p>
+            </div>
+          </div>
+          <div id="connections"></div>
+          <p id="meetstream-key-source" class="form-help"></p>
+          <p class="form-help">Your provider keys are saved in MeetStream. This project accesses them using its separate MeetStream API key. If the dashboard says Connected but a speech check says the key is missing, that request cannot access the saved provider connection. Check <a href="https://app.meetstream.ai/api-key" target="_blank" rel="noreferrer">the MeetStream API-key workspace</a> or have MeetStream repair the binding. You do not need to add Deepgram, AssemblyAI or JigsawStack speech keys here.</p>
+          <section class="explanation" id="extension-setup"><h2>Chrome overlay</h2><p>Display translated captions over your meeting tab. Install the extension and sign in here. In the extension choose Connect open workspace once, then start captions from any supported meeting tab. Choose the spoken and caption languages, admit the bot, and open the transcript or summary afterward. The connection expires after 24 hours.</p><p><a href="/extension-guide.html" target="_blank" rel="noreferrer">Installation and data-flow guide</a> · <a href="/extension.zip" download>Download Chrome extension</a> · <a href="/starter-kit.zip" download>Download complete starter kit</a></p><label for="extension-meeting">Meeting to connect</label><select id="extension-meeting"></select><div class="share-actions"><button id="extension-pair" class="secondary">Generate manual connection code</button><button id="extension-revoke" class="secondary">Revoke all extension connections</button></div><div id="extension-code-area" hidden><label for="extension-code">One-time code · expires in five minutes</label><input id="extension-code" readonly autocomplete="off"><button id="extension-copy" class="secondary">Copy code</button></div><p id="extension-status" role="status"></p></section>
+          <p id="connection-edit-notice" class="form-help" hidden>
+            Set APP_PASSWORD in .env and restart to enable private browser
+            configuration.
+          </p>
+          <p class="form-help">
+            Credentials entered here stay on this server. Saved browser settings
+            take precedence over .env; changes apply without a restart. Anyone
+            signed into this shared workspace can manage its connections.
+          </p>
+          <section class="explanation">
+            <h2>Keep your workspace running</h2><p><a href="/hosting-guide.html" target="_blank" rel="noreferrer">Hosting choices and setup</a> explains how to use the app without keeping your laptop on.</p><h2>Prepare a real meeting</h2>
+            <ol>
+              <li>
+                Configure MeetStream and a translation provider above, then test
+                their connections. Deepgram uses your existing MeetStream
+                integration.
+              </li>
+              <li>
+                For local HTTPS, add <code>NGROK_AUTHTOKEN</code> to
+                <code>.env</code> and run <code>npm start</code>. Copy the
+                printed endpoint.
+              </li>
+              <li>
+                Per-meeting callbacks are configured automatically. Optionally
+                register the workspace lifecycle URL in MeetStream’s Webhooks
+                page, subscribe to events, and save its signing secret in .env.
+              </li>
+              <li>
+                Start a live meeting here and admit the accessibility bot.
+                Participant permission and platform settings must allow
+                transcription.
+              </li>
+            </ol>
+            <p>
+              Live webhooks get a separate random URL per meeting. Slack and
+              Drive sharing happens only when you choose a destination in Export
+              & share.
+            </p>
+            <div class="endpoint">
+              <span>Workspace lifecycle webhook</span
+              ><code id="lifecycle-url"
+                >Set PUBLIC_ORIGIN to see your endpoint</code
+              >
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+    <div
+      id="announcer"
+      class="sr-only"
+      aria-live="polite"
+      aria-atomic="true"
+    ></div>
+    <div id="toast" role="status" hidden></div>
+    <dialog id="add-language-dialog" aria-labelledby="add-language-title"><form id="add-language-form"><h2 id="add-language-title">Add a translation language</h2><p>Translates this meeting's saved turns and future captions. Provider usage may be billed. Up to eight languages per meeting.</p><label for="add-language">Translation language</label><select id="add-language" required></select><p id="add-language-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button class="secondary" type="button" data-close>Cancel</button><button class="primary" id="add-language-save">Add language</button></div></form></dialog>
+    <dialog id="connection-dialog" aria-labelledby="connection-title">
+      <form id="connection-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="connection-title">Configure connection</h2>
+            <p>Leave a secret field blank to keep its saved value.</p>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            data-close
+            aria-label="Close connection settings"
+          >
+            ×
+          </button>
+        </div>
+        <div id="connection-fields"></div>
+        <p class="form-help">
+          Keys are stored in a private file on this server, never in browser
+          storage. Drive needs an OAuth refresh token with folder access. Slack
+          needs file-upload scopes and channel membership.
+        </p>
+        <p id="connection-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button type="button" id="disconnect-connection" class="secondary">
+            Disconnect</button
+          ><button type="button" class="secondary" data-close>Cancel</button
+          ><button id="connection-save" class="primary">Save connection</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="deepgram-dialog" aria-labelledby="deepgram-title">
+      <form id="deepgram-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="deepgram-title">Test Deepgram with saved audio</h2>
+            <p>Check the integration used by this MeetStream API workspace.</p>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            data-close
+            aria-label="Close Deepgram test"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Recorded meeting<select
+            id="deepgram-meeting"
+            name="meetingId"
+            required
+          ></select
+        ></label>
+        <label
+          >Spoken language<select name="source" required>
+            <option value="hi">Hindi</option>
+            <option value="ta">Tamil</option>
+          </select></label
+        >
+        <p class="form-help" id="provider-test-help">
+          Starts a billable Deepgram post-call transcription of existing audio.
+          This checks provider access; the meeting's saved transcript is
+          preserved. Use audio in the selected language, within the provider's
+          retention period.
+        </p>
+        <p id="deepgram-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button class="secondary" type="button" data-close>Cancel</button
+          ><button id="deepgram-submit" class="primary">
+            Start audio test
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="details-dialog" aria-labelledby="details-title">
+      <form id="details-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="details-title">Edit meeting details</h2>
+            <p>Keep your decisions and follow-ups alongside the transcript.</p>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            data-close
+            aria-label="Close meeting details"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Rename meeting<input
+            id="details-meeting-title"
+            name="title"
+            maxlength="100"
+            required
+        /></label>
+        <label
+          >Meeting notes<textarea
+            id="details-notes"
+            name="notes"
+            rows="5"
+            maxlength="20000"
+          ></textarea>
+        </label>
+        <fieldset>
+          <legend>Action items</legend>
+          <div id="details-actions" class="details-actions"></div>
+          <button type="button" id="add-action" class="secondary">
+            Add action item
+          </button>
+        </fieldset>
+        <p id="details-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button type="button" class="secondary" data-close>Cancel</button
+          ><button id="details-save" class="primary">Save details</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="new-dialog" aria-labelledby="new-dialog-title">
+      <form id="meeting-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="new-dialog-title">Start a meeting</h2>
+            <p>Make the conversation accessible from the first word.</p>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            data-close
+            aria-label="Close new meeting dialog"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Meeting title<input
+            name="title"
+            placeholder="Use calendar name, or enter a name"
+            maxlength="100"
+        /></label>
+        <fieldset class="mode-choice">
+          <legend>Meeting mode</legend>
+          <label
+            ><input type="radio" name="mode" value="demo" checked /> Sample
+            replay <small>Hindi and Tamil · no credentials</small></label
+          ><label
+            ><input type="radio" name="mode" value="live" /> Real meeting
+            <small>Uses your configured providers</small></label
+          >
+        </fieldset>
+        <div id="live-fields" hidden>
+          <label
+            >Meeting URL<input
+              name="meetingLink"
+              type="url"
+              placeholder="https://meet.google.com/abc-defg-hij"
+          /></label>
+          <div class="form-grid">
+            <label
+              >Live transcription<select name="liveProvider">
+                <option value="meetstream_streaming">
+                  MeetStream · automatic detection
+                </option>
+                <option value="deepgram_streaming">
+                  Deepgram Nova-3 · Hindi, Tamil and other fixed sources
+                </option>
+                <option value="assemblyai_streaming">AssemblyAI · English live</option>
+                <option value="jigsawstack_streaming">JigsawStack · Google Meet only</option>
+              </select></label
+            ><label
+              >Translation provider<select name="translationProvider">
+                <option value="" disabled>Choose translation provider</option><option value="google">Google Cloud Translation</option>
+                <option value="azure">Azure Translator</option><option value="deepl">DeepL</option><option value="jigsawstack">JigsawStack</option>
+              </select></label
+            >
+          </div>
+          <label
+            >Post-call transcription<select
+              name="postCallProvider"
+              id="post-call-provider"
+            >
+              <option value="meetstream">MeetStream hosted</option>
+              <option value="deepgram">Deepgram Nova-3 · fixed source</option><option value="assemblyai">AssemblyAI Universal-2 · fixed source</option><option value="jigsawstack">JigsawStack · multilingual</option>
+            </select></label
+          >
+          <label
+            >Source language<select name="source" id="source-language">
+              <option value="auto">Detect automatically</option>
+            </select></label
+          >
+          <label class="checkbox-label"
+            ><input type="checkbox" name="recordVideo" value="true" /> Also
+            record video (active speaker view)</label
+          >
+          <p id="provider-readiness" class="form-help" role="status"></p>
+          <p class="form-help">
+            MeetStream detects live speech automatically. A fixed source is a
+            translation hint and sets the post-call language. Deepgram Nova-3
+            supports Hindi and Tamil with a fixed source and a key saved in
+            MeetStream.
+          </p>
+        </div>
+        <label>Find a translation language<input id="target-search" type="search" placeholder="Search language name or code"></label>
+        <fieldset id="target-options">
+          <legend>
+            Available translations <small>Select up to eight</small>
+          </legend>
+        </fieldset>
+        <p id="new-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button class="secondary" type="button" data-close>Cancel</button
+          ><button id="create-meeting" class="primary" type="submit">
+            Start sample
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="spoken-dialog" aria-labelledby="spoken-title">
+      <form id="spoken-form">
+        <div class="dialog-heading"><h2 id="spoken-title">Change spoken language</h2><button type="button" class="icon-button" data-close aria-label="Close spoken language dialog">×</button></div>
+        <p id="spoken-current"></p><p id="spoken-help" class="form-help"></p>
+        <label for="spoken-source">New spoken language</label><select id="spoken-source" required></select>
+        <p class="form-help">This ends the current recording part and rejoins this call with the new recognizer language. Captions pause during the switch. Admit the bot again if asked. Earlier transcripts, summaries and recordings stay available as a separate part.</p>
+        <p id="spoken-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions"><button type="button" class="secondary" data-close>Cancel</button><button id="spoken-save" class="primary">Restart captions in new language</button></div>
+      </form>
+    </dialog>
+    <dialog id="recovery-dialog" aria-labelledby="recovery-title"><form id="recovery-form"><h2 id="recovery-title">Recover transcript from saved audio</h2><p>The recording stays intact. Choose a working speech provider; processing may be billed.</p><label for="recovery-provider">Recovery provider</label><select id="recovery-provider"><option value="meetstream">MeetStream · automatic detection</option><option value="deepgram">Deepgram</option><option value="assemblyai">AssemblyAI</option><option value="jigsawstack">JigsawStack</option></select><label for="recovery-source">Spoken language</label><select id="recovery-source"></select><p id="recovery-error" class="form-error" role="alert" hidden></p><div class="dialog-actions"><button type="button" class="secondary" data-close>Cancel</button><button id="recover-save" class="primary">Recover transcript</button></div></form></dialog>
+    <dialog id="export-dialog" aria-labelledby="export-dialog-title">
+      <form id="export-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="export-dialog-title">Take the conversation with you.</h2>
+            <p>Speaker names and timestamps stay with your words.</p>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            data-close
+            aria-label="Close export dialog"
+          >
+            ×
+          </button>
+        </div>
+        <div class="form-grid">
+          <label
+            >Transcript version<select name="kind">
+              <option value="live">Live record</option>
+              <option value="final">Post-call transcript</option>
+            </select></label
+          ><label
+            >Translation language<select
+              name="target"
+              id="export-language"
+            ></select
+          ></label>
+        </div>
+        <label
+          >Format<select name="format">
+            <option value="vtt">WebVTT · speaker-labeled captions</option>
+            <option value="srt">SRT · universal subtitles</option>
+            <option value="html">
+              HTML document · accessible bilingual view
+            </option>
+            <option value="md">Markdown · bilingual notes</option>
+            <option value="txt">Plain text · portable notes</option>
+            <option value="json">JSON · data and measurement timestamps</option>
+          </select></label
+        ><label class="checkbox-label"
+          ><input name="bilingual" type="checkbox" /> Include original text in
+          subtitles</label
+        >
+        <p class="form-help">
+          Choose Original languages to save even if translation fails. HTML
+          opens offline; use Print in its preview to save a PDF. Full archive
+          saves both transcript versions, every translation, reviews and
+          measurements as JSON. HTML and Markdown include both languages for
+          translated exports. Subtitle timing follows provider timestamps where
+          available; estimated live timing is identified in HTML, VTT and JSON.
+          SRT has no metadata field.
+        </p>
+        <p id="export-error" class="form-error" role="alert" hidden></p>
+        <div class="share-actions">
+          <button id="copy-transcript" type="button" class="secondary">
+            Copy text</button
+          ><button id="print-transcript" type="button" class="secondary">
+            Print / save PDF
+          </button>
+          <button id="share-native" type="button" class="secondary">Share file…</button><button id="share-gmail" type="button" class="secondary">Create Gmail draft</button>
+          <button id="share-slack" type="button" class="secondary">
+            Share to Slack</button
+          ><button id="share-discord" class="secondary" type="button">Share to Discord</button><button id="share-drive" type="button" class="secondary">
+            Save to Google Drive
+          </button>
+        </div>
+        <a id="gmail-draft-link" href="https://mail.google.com/mail/u/0/#drafts" target="_blank" rel="noreferrer" hidden>Open Gmail drafts to review and send</a>
+        <div class="dialog-actions">
+          <button class="secondary" type="button" data-close>Close</button
+          ><button class="primary" id="download-export" type="submit">
+            <svg><use href="#download-icon" /></svg> Download
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="review-dialog" aria-labelledby="review-dialog-title">
+      <form id="review-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="review-dialog-title">Review this translation</h2>
+            <p>A human score helps put quality in context.</p>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            data-close
+            aria-label="Close review dialog"
+          >
+            ×
+          </button>
+        </div>
+        <blockquote id="review-original" dir="auto"></blockquote>
+        <blockquote id="review-translation" dir="auto"></blockquote>
+        <label
+          >Quality score<select name="score">
+            <option value="5">5 · Meaning preserved, natural wording</option>
+            <option value="4">4 · Minor wording issues</option>
+            <option value="3">3 · Understandable, some meaning lost</option>
+            <option value="2">2 · Major meaning errors</option>
+            <option value="1">1 · Unusable or misleading</option>
+          </select></label
+        ><label
+          >Review notes<textarea
+            name="notes"
+            maxlength="1000"
+            rows="3"
+            placeholder="Terminology, speaker context, or corrections"
+          ></textarea>
+        </label>
+        <p id="review-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button class="secondary" type="button" data-close>Cancel</button
+          ><button class="primary" type="submit">Save review</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="profile-dialog" aria-labelledby="profile-title">
+      <form id="profile-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="profile-title">Your reading preferences</h2>
+            <p>Saved in this browser for your next visit.</p>
+          </div>
+          <button
+            class="icon-button"
+            type="button"
+            data-close
+            aria-label="Close profile dialog"
+          >
+            ×
+          </button>
+        </div>
+        <label
+          >Display name<input
+            id="profile-name"
+            name="displayName"
+            maxlength="40"
+            autocomplete="nickname"
+            placeholder="Meeting participant"
+        /></label>
+        <div class="form-grid">
+          <label
+            >Preferred caption language<select
+              id="profile-language"
+              name="language"
+            ></select
+          ></label>
+          <label
+            >Default text size<select id="profile-size" name="size">
+              <option value="24">Standard · 24 px</option>
+              <option value="30">Large · 30 px</option>
+              <option value="38">Extra large · 38 px</option>
+            </select></label
+          >
+        </div>
+        <label class="checkbox-label"
+          ><input id="profile-contrast" name="contrast" type="checkbox" /> Use
+          high contrast</label
+        >
+        <p class="form-help">
+          Your preferred language is used when available in a meeting. Speaker
+          names come from MeetStream.
+        </p>
+        <div class="dialog-actions">
+          <button class="secondary" type="button" data-close>Cancel</button
+          ><button class="primary" type="submit">Save preferences</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="login-dialog" aria-labelledby="login-dialog-title">
+      <form id="login-form">
+        <div class="dialog-heading">
+          <div>
+            <h2 id="login-dialog-title">Welcome to your workspace.</h2>
+            <p>Enter the workspace password to access meeting transcripts.</p>
+          </div>
+        </div>
+        <label
+          >Workspace password<input
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+        /></label>
+        <p id="login-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button class="primary" type="submit">Sign in</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

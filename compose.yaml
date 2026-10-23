@@ -1,0 +1,16 @@
+services:
+  accessibility:
+    build: .
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      DATABASE_PATH: /app/data/meetings.sqlite
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - meeting-data:/app/data
+    restart: unless-stopped
+    stop_grace_period: 30s
+volumes:
+  meeting-data:
