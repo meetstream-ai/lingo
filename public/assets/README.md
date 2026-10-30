@@ -1,0 +1,1 @@
+Accessibility logo and mark are original SVG artwork for this starter kit: a caption bubble and a shared voice. MeetStream is the integration provider; this is not an official MeetStream corporate logo.

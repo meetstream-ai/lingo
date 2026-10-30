@@ -1,0 +1,2 @@
+const lines = { en: 'Let’s decide the next steps together.', hi: 'आइए अगले कदम साथ में तय करें।', ta: 'அடுத்த படிகளை ஒன்றாக முடிவு செய்வோம்.', es: 'Decidamos juntos los próximos pasos.' };
+document.getElementById('preview-language').addEventListener('change', event => { const p = document.getElementById('preview-translation'); p.textContent = lines[event.target.value]; p.lang = event.target.value; });

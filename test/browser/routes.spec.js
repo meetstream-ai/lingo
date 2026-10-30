@@ -1,0 +1,9 @@
+import{test,expect}from'@playwright/test';
+test('homepage spacing and canonical routes survive refresh, legacy links and browser history',async({page,context})=>{
+ await page.goto('/?utm_source=route-check');await expect(page.getByRole('heading',{level:1})).toContainText('The meeting stays.');
+ const hero=await page.locator('.hero').evaluate(el=>({top:parseFloat(getComputedStyle(el).paddingTop),bottom:parseFloat(getComputedStyle(el).paddingBottom)}));expect(hero.top).toBeLessThanOrEqual(36);expect(hero.bottom).toBeLessThanOrEqual(44);
+ await page.getByRole('link',{name:'Open workspace',exact:true}).click();await expect(page).toHaveURL(/\/workspace\/meetings$/);await expect(page.getByRole('heading',{name:'Your meetings',exact:true})).toBeVisible();
+ await page.getByRole('button',{name:'Connections',exact:true}).click();await expect(page).toHaveURL(/\/workspace\/connections$/);await page.reload();await expect(page.getByRole('heading',{name:'Bring it all together.',exact:true})).toBeVisible();
+ await page.goBack();await expect(page.getByRole('heading',{name:'Your meetings',exact:true})).toBeVisible();await page.goBack();await expect(page.getByRole('heading',{level:1})).toContainText('The meeting stays.');await page.goForward();await expect(page.getByRole('heading',{name:'Your meetings',exact:true})).toBeVisible();
+ const tab=await context.newPage();await tab.goto('/workspace?view=measurements');await expect(tab).toHaveURL(/\/workspace\/health$/);await expect(tab.getByRole('heading',{name:'How is this meeting doing?',exact:true})).toBeVisible();await tab.goto('/workspace/not-real');await expect(tab.getByRole('heading',{name:'This page could not be found.',exact:true})).toBeVisible();await tab.getByRole('link',{name:'Open meetings',exact:true}).click();await expect(tab.getByRole('heading',{name:'Your meetings',exact:true})).toBeVisible();await tab.close();
+});

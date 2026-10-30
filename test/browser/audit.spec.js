@@ -1,0 +1,17 @@
+import {test,expect} from '@playwright/test';import AxeBuilder from '@axe-core/playwright';
+import {createApp} from '../../server/app.js';
+test('DeepL is configurable, limits choices to its catalog and identifies translation clearly',async({page})=>{
+ let created=0;const kit=createApp({database:':memory:',env:{DEEPL_API_KEY:'fixture:fx',PUBLIC_ORIGIN:'https://kit.example',APP_PASSWORD:'fixture-password'},meetstream:{bots:{create:async()=>{created++;return {bot_id:'fixture-bot'};},status:async()=>({status:'InMeeting'})}},fetchImpl:async()=>Response.json({translations:[{text:'Bonjour',detected_source_language:'EN'}]})});
+ const server=kit.app.listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));const base=`http://127.0.0.1:${server.address().port}`;
+ try {
+  await page.goto(base+'/workspace/connections');await page.getByLabel('Workspace password',{exact:true}).fill('fixture-password');await page.getByRole('button',{name:'Sign in',exact:true}).click();
+  const card=page.getByRole('article').filter({has:page.getByRole('heading',{name:'DeepL',exact:true})});await expect(card).toContainText('Saved · not tested');await expect(card).not.toContainText('fixture:fx');
+  await page.getByRole('button',{name:'Captions',exact:true}).click();await page.getByRole('button',{name:'New meeting',exact:true}).click();await page.getByRole('radio',{name:'Real meeting Uses your configured providers'}).check();await page.getByLabel('Meeting title',{exact:true}).fill('DeepL adapter verification');
+  await page.locator('select[name=translationProvider]').selectOption('deepl');await expect(page.locator('input[name=targets][value=hi]')).toBeDisabled();await expect(page.locator('input[name=targets][value=hi]')).not.toBeChecked();
+  await page.locator('select[name=liveProvider]').selectOption('deepgram_streaming');await page.locator('#source-language').selectOption('en');await page.getByLabel('Meeting URL',{exact:true}).fill('https://meet.google.com/');await page.getByRole('button',{name:'Join meeting',exact:true}).click();await expect(page.locator('#new-error')).toContainText('Join a Google Meet call first');expect(created).toBe(0);
+  await page.getByLabel('Meeting URL',{exact:true}).fill('https://meet.google.com/meet/abc-defg-hij');await page.getByRole('button',{name:'Join meeting',exact:true}).click();await expect(page.locator('#meeting-services')).toContainText('Text translationDeepL');await expect.poll(()=>created).toBe(1);expect(kit.store.meetings()[0].meetingLink).toBe('https://meet.google.com/abc-defg-hij');
+  await page.screenshot({path:`test-results/audit-deepl-${test.info().project.name}.png`,fullPage:true});await page.setViewportSize({width:360,height:800});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  const axe=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();expect(axe.violations).toEqual([]);
+  await page.getByRole('button',{name:'New meeting',exact:true}).click();await page.getByRole('radio',{name:'Sample replay Hindi and Tamil · no credentials'}).check();await page.getByRole('button',{name:'Start sample',exact:true}).click();await expect(page.locator('#sample-notice')).toBeVisible();expect(kit.store.meetings()[0].mode).toBe('demo');expect(kit.store.meetings()[0].translationProvider).toBe('google');
+ }finally{await kit.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
+});
