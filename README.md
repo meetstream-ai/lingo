@@ -43,7 +43,7 @@ Speech recognition and text translation are different services. A configured spe
 | Translated audio | Google Cloud Text-to-Speech, matching device voices | Optional `GOOGLE_TTS_API_KEY`; otherwise the Google translation key is tried |
 | AI summary | JigsawStack | Optional `JIGSAWSTACK_API_KEY` in Lingo |
 
-The UI limits choices to each adapter's language catalog. DeepL currently exposes a conservative 32-code subset; use Google, Azure or JigsawStack for Hindi/Tamil targets. AssemblyAI live through this integration is English-only; JigsawStack live is Google Meet-only. Deepgram live needs a fixed spoken language. Native MeetStream live uses automatic recognition. See the [provider/link audit](docs/AUDIT-2026-10-23.md) for details.
+The UI limits choices to each adapter's language catalog. DeepL currently exposes a conservative 32-code subset; use Google, Azure or JigsawStack for Hindi/Tamil targets. AssemblyAI live through this integration is English-only; JigsawStack live is Google Meet-only. Deepgram live needs a fixed spoken language. Native MeetStream live uses automatic recognition.
 
 Provider accounts, billing, quota and meeting admission are your responsibility. Self-hosting this open-source app does not make speech or translation APIs free.
 
@@ -85,7 +85,7 @@ npm run build
 
 `npm run dev` watches the backend without managing ngrok. `npm run benchmark -- --demo` exercises sample translation measurements. `npm run build` checks JavaScript syntax, creates extension/source ZIPs, and produces a runnable `dist/` source distribution. Generated downloads are available at `/extension.zip` and `/starter-kit.zip` while the server runs. Do not edit generated files.
 
-Automated tests use controlled fixtures. They do not prove real speech quality, external account permissions or vendor bot admission. The latest audit recorded 82 backend and 75 browser passes, with 12 intentional non-Chromium extension skips; see [verification limits](docs/AUDIT-2026-10-23.md). Live language-pair quality and end-to-end latency need real-call acceptance. Production readiness is not claimed merely because tests pass.
+Automated tests use controlled fixtures. They do not prove real speech quality, external account permissions or vendor bot admission. See the [real-call acceptance checklist](docs/ACCEPTANCE.md) for verification steps. Live language-pair quality and end-to-end latency need real-call acceptance. Production readiness is not claimed merely because tests pass.
 
 ## Repository layout
 
