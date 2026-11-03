@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { relative, join } from 'node:path';
 
 // Public documentation only; local meeting diagnostics and captures are private.
-export const PUBLIC_DOCS = ['HOSTING.md','ROADMAP.md','RELEASE-1.6.md','AUDIT-2026-10-23.md','ACCEPTANCE.md','REFERENCE.md'];
+export const PUBLIC_DOCS = ['HOSTING.md','ACCEPTANCE.md','REFERENCE.md'];
 
 // Store-only ZIP, using Node's native CRC32. No build tool or zip binary required.
 function zip(root,files,output) {
